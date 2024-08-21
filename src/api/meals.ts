@@ -1,4 +1,3 @@
-// src/api/meals.ts
 import axios from "axios";
 import { MealsResponse, MealDetailsResponse } from "../types/api";
 
