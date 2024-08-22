@@ -1,10 +1,14 @@
 import { FC, useState, useEffect, ChangeEvent } from "react";
 import { useQuery } from "@tanstack/react-query";
+
 import { Box, Grid, Typography } from "@mui/material";
+import { SelectChangeEvent } from "@mui/material";
+
 import {
   useSelectedMeals,
   useUpdateSelectedMeals,
 } from "../../hooks/useSelectedMeals";
+
 import { fetchMealsByCategory } from "../../api/meals";
 import { IMeal } from "../../types/api";
 import CategorySelect from "../../components/CategorySelect";
@@ -13,7 +17,6 @@ import MealCard from "../../components/MealCard";
 import PaginationComponent from "../../components/PaginationComponent";
 import SelectedRecipesButton from "../../components/SelectedRecipesButton";
 import useDebounce from "../../hooks/useDebounce";
-import { SelectChangeEvent } from "@mui/material";
 
 const AllMeals: FC = () => {
   const [category, setCategory] = useState<string>("");
