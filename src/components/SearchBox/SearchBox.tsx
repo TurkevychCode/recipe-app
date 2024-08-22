@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-
 import { FormControl, TextField } from "@mui/material";
 
 interface SearchBoxProps {
