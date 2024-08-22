@@ -5,6 +5,20 @@ export interface IMeal {
   strInstructions: string;
   [key: string]: any;
 }
+export interface Category {
+  idCategory: string;
+  strCategory: string;
+  strCategoryThumb: string;
+  strCategoryDescription: string;
+}
+
+export interface Category {
+  strCategory: string;
+}
+
+export interface CategoriesResponse {
+  meals: Category[];
+}
 
 export interface MealsResponse {
   meals: IMeal[];

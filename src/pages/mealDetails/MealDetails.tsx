@@ -8,13 +8,16 @@ import {
   Typography,
   CardMedia,
   Button,
+  Divider,
+  List,
+  ListItem,
+  CircularProgress,
 } from "@mui/material";
 
 import { fetchMealById } from "../../api/meals";
 
 const MealDetail: FC = () => {
   const navigate = useNavigate();
-
   const { id } = useParams<{ id: string }>();
   const [meal, setMeal] = useState<any>(null);
   const [loading, setLoading] = useState(true);
@@ -35,20 +38,34 @@ const MealDetail: FC = () => {
     fetchMeal();
   }, [id]);
 
-  if (loading) return <Box>Loading...</Box>;
-  if (error) return <Box>{error}</Box>;
+  if (loading)
+    return (
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        height="100vh"
+      >
+        <CircularProgress />
+      </Box>
+    );
+  if (error)
+    return (
+      <Box color="error.main" textAlign="center">
+        {error}
+      </Box>
+    );
 
   return (
-    <Box>
-      <Button
-        onClick={() => navigate(-1)}
-        variant="outlined"
-        color="primary"
-        sx={{ marginBottom: 2 }}
-      >
-        Back
-      </Button>
-      <Card>
+    <Box
+      sx={{
+        padding: 3,
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+      }}
+    >
+      <Card sx={{ maxWidth: 800, margin: "auto" }}>
         {meal && (
           <>
             <CardMedia
@@ -56,30 +73,48 @@ const MealDetail: FC = () => {
               height="300"
               image={meal.strMealThumb}
               alt={meal.strMeal}
+              sx={{ objectFit: "cover" }}
             />
             <CardContent>
-              <Typography variant="h4">{meal.strMeal}</Typography>
-              <Typography variant="h6">Category: {meal.strCategory}</Typography>
-              <Typography variant="h6">Area: {meal.strArea}</Typography>
-              <Typography variant="body1">
-                Instructions: {meal.strInstructions}
+              <Typography variant="h4" gutterBottom>
+                {meal.strMeal}
               </Typography>
-              <Typography variant="body2">Ingredients:</Typography>
-              <ul>
+              <Typography variant="h6" color="textSecondary">
+                Category: {meal.strCategory}
+              </Typography>
+              <Typography variant="h6" color="textSecondary">
+                Area: {meal.strArea}
+              </Typography>
+              <Divider sx={{ my: 2 }} />
+              <Typography variant="body1" paragraph>
+                <strong>Instructions:</strong> {meal.strInstructions}
+              </Typography>
+              <Typography variant="body2" gutterBottom>
+                <strong>Ingredients:</strong>
+              </Typography>
+              <List>
                 {[...Array(20)].map((_, index) => {
                   const ingredient = meal[`strIngredient${index + 1}`];
                   const measure = meal[`strMeasure${index + 1}`];
                   return ingredient && measure ? (
-                    <li key={index}>
+                    <ListItem key={index}>
                       {ingredient} - {measure}
-                    </li>
+                    </ListItem>
                   ) : null;
                 })}
-              </ul>
+              </List>
             </CardContent>
           </>
         )}
       </Card>
+      <Button
+        onClick={() => navigate(-1)}
+        variant="outlined"
+        color="primary"
+        sx={{ marginBottom: 2, marginTop: 2, width: "100px" }}
+      >
+        Back
+      </Button>
     </Box>
   );
 };
