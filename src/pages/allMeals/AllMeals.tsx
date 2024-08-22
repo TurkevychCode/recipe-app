@@ -1,7 +1,7 @@
 import { FC, useState, useEffect, ChangeEvent } from "react";
 import { useQuery } from "@tanstack/react-query";
 
-import { Box, Grid, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import { SelectChangeEvent } from "@mui/material";
 
 import {
@@ -17,6 +17,7 @@ import MealCard from "../../components/MealCard";
 import PaginationComponent from "../../components/PaginationComponent";
 import SelectedRecipesButton from "../../components/SelectedRecipesButton";
 import useDebounce from "../../hooks/useDebounce";
+import MealCardList from "../../components/MealCardList";
 
 const AllMeals: FC = () => {
   const [category, setCategory] = useState<string>("");
@@ -26,8 +27,8 @@ const AllMeals: FC = () => {
   const { selectedMeals } = useSelectedMeals();
   const { mutate: updateSelectedMeals } = useUpdateSelectedMeals();
 
-  const limit = 8;
   const debouncedSearch = useDebounce(search, 300);
+  const limit = 8;
 
   const {
     data: mealsData,
@@ -129,17 +130,11 @@ const AllMeals: FC = () => {
         <SearchBox search={search} onSearchChange={handleSearchChange} />
       </Box>
 
-      <Grid container spacing={2} marginTop={2}>
-        {currentMeals.map((meal) => (
-          <Grid item xs={12} sm={6} md={4} lg={3} key={meal.idMeal}>
-            <MealCard
-              meal={meal}
-              isSelected={selectedMeals.some((m) => m.idMeal === meal.idMeal)}
-              onSelect={handleSelectMeal}
-            />
-          </Grid>
-        ))}
-      </Grid>
+      <MealCardList
+        meals={currentMeals}
+        selectedMeals={selectedMeals}
+        onSelectMeal={handleSelectMeal}
+      />
       <Box marginTop={2} display="flex" justifyContent="center">
         <PaginationComponent
           count={totalPages}
