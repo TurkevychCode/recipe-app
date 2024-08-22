@@ -10,6 +10,8 @@ import {
   CardContent,
   CardMedia,
   Button,
+  CircularProgress,
+  Divider,
 } from "@mui/material";
 
 import { fetchMealById } from "../../api/meals";
@@ -44,9 +46,23 @@ const SelectedRecipesPage: FC = () => {
     navigate(-1);
   };
 
-  if (isLoading) return <Box>Loading...</Box>;
+  if (isLoading)
+    return (
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        height="100vh"
+      >
+        <CircularProgress />
+      </Box>
+    );
   if (error instanceof Error)
-    return <Box>An error occurred: {error.message}</Box>;
+    return (
+      <Box color="error.main" textAlign="center">
+        An error occurred: {error.message}
+      </Box>
+    );
 
   const allIngredients = meals?.flatMap((meal: IMeal) =>
     Object.entries(meal)
@@ -54,8 +70,10 @@ const SelectedRecipesPage: FC = () => {
       .map(([key, value]) => value)
   );
 
+  const ingredientsList = allIngredients?.join(", ");
+
   return (
-    <Box>
+    <Box sx={{ padding: 3 }}>
       <Button
         variant="outlined"
         onClick={() => navigate(-1)}
@@ -79,12 +97,13 @@ const SelectedRecipesPage: FC = () => {
       <Grid container spacing={2}>
         {meals?.map((meal: IMeal) => (
           <Grid item xs={12} sm={6} md={4} lg={3} key={meal.idMeal}>
-            <Card>
+            <Card sx={{ boxShadow: 3 }}>
               <CardMedia
                 component="img"
                 height="140"
                 image={meal.strMealThumb}
                 alt={meal.strMeal}
+                sx={{ objectFit: "cover" }}
               />
               <CardContent>
                 <Typography variant="h5" component="div">
@@ -100,12 +119,13 @@ const SelectedRecipesPage: FC = () => {
       </Grid>
 
       <Box mt={4}>
-        <Typography variant="h6">All Ingredients:</Typography>
-        <ul>
-          {allIngredients?.map((ingredient, index) => (
-            <li key={index}>{ingredient}</li>
-          ))}
-        </ul>
+        <Typography variant="h6" gutterBottom>
+          All Ingredients:
+        </Typography>
+        <Divider sx={{ mb: 2 }} />
+        <Typography variant="body1">
+          {ingredientsList || "No ingredients available"}
+        </Typography>
       </Box>
     </Box>
   );
